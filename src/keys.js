@@ -1,0 +1,3 @@
+const stripe_publishable_key = "pk_test_51JKK7yFJnacJxAWvbKT1zvd07cwvdUbej4K3R9VSB30SsauPVEJ9s5FML6ieRzD5SztkPwWgdSyFMsKSYBkh4U8y00tx6ZJtWE";
+
+export default stripe_publishable_key;
