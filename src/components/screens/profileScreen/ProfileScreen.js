@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectUser } from '../../../features/counter/userSlice'
 import { auth } from '../../../Firebase'
 import Nav from '../../nav/Nav'
+import PlansScreen from '../plansScreen/PlansScreen'
 import './ProfileScreen.css'
 
 export default function ProfileScreen() {
 
   const user = useSelector(selectUser);
+  const [currentPlan, setCurrentPlan] = useState(null);
   return (
     <div className="profileScreen">
       <Nav />
@@ -19,7 +21,8 @@ export default function ProfileScreen() {
           <div className="profileScreen__details">
             <h2>{user.email}</h2>
             <div className="profileScrren__plans">
-              <h3>Plans</h3>
+              <h3>{`Plans ${currentPlan && "(Current Plan: " + currentPlan +")"}`}</h3>
+              <PlansScreen setCurrentPlan={setCurrentPlan}/>
               <button 
                 onClick={() => auth.signOut()}
                 className="profileScrren__signOut">Sign Out</button>
