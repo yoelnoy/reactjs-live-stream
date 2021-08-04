@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './Banner.css'
 import axios from 'axios';
 
-export default function Banner() {
+export default function Banner({ setBannerData, loader }) {
 
   const [movie, setMovie] = useState([]);
 
@@ -12,7 +12,8 @@ export default function Banner() {
           res.data.results[
             Math.floor(Math.random() * res.data.results.length - 1)
           ]
-        )
+        );
+        setBannerData(true)
     })
   }, [])
 
@@ -23,7 +24,10 @@ export default function Banner() {
 
   return (
     <div>
-      <header className="banner" style={{backgroundPosition:"inherit center", backgroundSize: "cover", backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path}")`}}>
+      {loader ? (
+        <div></div>
+      ) : (
+        <header className="banner" style={{backgroundPosition:"inherit center", backgroundSize: "cover", backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path}")`}}>
         <div className="banner__content">
           <div className="banner__inner-content">
             <h1 className="banner__title">{movie.title}</h1>
@@ -36,12 +40,11 @@ export default function Banner() {
             </h1>
           </div>
         </div>
-        
-
-        
-
+      
         <div className="banner--fadeButton" />
       </header>
+      )}
+      
     </div>
   )
 }

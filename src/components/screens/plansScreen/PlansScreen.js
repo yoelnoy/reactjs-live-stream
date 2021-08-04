@@ -2,6 +2,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../features/counter/userSlice';
+import ClipLoader from "react-spinners/ClipLoader";
 import db from '../../../Firebase';
 import key from '../../../keys';
 import './PlansScreen.css'
@@ -10,6 +11,7 @@ export default function PlansScreen({ setCurrentPlan }) {
 
   const[products, setProducts] = useState([]);
   const [subscription, setSubscription] = useState(null);
+  const [loader, setLoader] = useState(false);
   const user = useSelector(selectUser);
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function PlansScreen({ setCurrentPlan }) {
   }, [])
 
   const loadCheckout = async (priceId) => {
+    console.log("going 1");
     const docRef = await db.collection('customers').doc(user.uid).collection("checkout_sessions").add({
       price: priceId,
       success_url: window.location.origin,
@@ -52,6 +55,8 @@ export default function PlansScreen({ setCurrentPlan }) {
     });
 
     docRef.onSnapshot(async(snap) => {
+      console.log("going 2");
+      {snap? setLoader(true) : setLoader(false)}
       const { error, sessionId } = snap.data();
 
       if(error) {
@@ -59,6 +64,7 @@ export default function PlansScreen({ setCurrentPlan }) {
       }
 
       if(sessionId) {
+        console.log("going 3");
         const stripe = await loadStripe(key);
         stripe.redirectToCheckout({ sessionId });
       }
@@ -67,7 +73,13 @@ export default function PlansScreen({ setCurrentPlan }) {
 
   return (
     <div className="planScreen">
-      {subscription && (
+      {loader ? (
+        <div className="planScreen__loader">
+          <ClipLoader color="red" loading={loader}  size={150}/>
+        </div>
+      ) : (
+        <div>
+        {subscription && (
         <p>Renewal date: {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
         </p>
       )}
@@ -87,6 +99,9 @@ export default function PlansScreen({ setCurrentPlan }) {
           </div>
         )
       })}
+        </div>
+      )}
+      
     </div>
   )
 }

@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './HomeScreen.css'
+import ClipLoader from "react-spinners/ClipLoader";
 import Nav from '../../nav/Nav'
 import Banner from '../../banner/Banner'
 import Row from '../../row/Row'
+import Loader from 'react-spinners/ClipLoader';
 
 export default function HomeScreen() {
+
+  const [bannerdata, setBannerData] = useState(false);
+  const [rowdata, setRowData] = useState(false);
+  const [loader, setLoader] = useState(true);
+
+  console.log(bannerdata);
+
+  useEffect(() => {
+    if(bannerdata && rowdata !== false){
+      setLoader(false)
+    }
+  })
+
+  console.log(bannerdata);
 
   const trending = "https://api.themoviedb.org/3/trending/all/week?api_key=a59e3780f10803b45edc5b425207702a&language=en-US"
   const originals = "https://api.themoviedb.org/3/discover/tv?api_key=a59e3780f10803b45edc5b425207702a&with_network=213"
@@ -18,15 +34,22 @@ export default function HomeScreen() {
     <div>
       <div className="HomeScreen">
         <Nav />
-        <Banner />
-        <Row title="Netflix Originals" isLargeRow request={originals} />
-        <Row title="Trending Now" request={trending}/>
-        <Row title="Top Rated" request={top_rated}/>
-        <Row title="Action Movies" request={actionM} />
-        <Row title="Comedy Movies" request={comedyM} />
-        <Row title="Horror Movies" request={horrorM} />
-        <Row title="Romantic Movies" request={romanceM} />
-        <Row title="Documentaries" request={documentariesM} />
+        {loader ? (
+          <div className="planScreen__loader">
+            <ClipLoader color="red" loading={loader}  size={150}/>
+          </div>
+        ) : (
+          null
+        )}
+        <Banner setBannerData={setBannerData} loader={loader} />
+        <Row title="Netflix Originals" isLargeRow request={originals} setRowData={setRowData} loader={loader}/>
+        <Row title="Trending Now" request={trending} setRowData={setRowData} loader={loader}/>
+        <Row title="Top Rated" request={top_rated} setRowData={setRowData} loader={loader}/>
+        <Row title="Action Movies" request={actionM} setRowData={setRowData} loader={loader}/>
+        <Row title="Comedy Movies" request={comedyM} setRowData={setRowData} loader={loader}/>
+        <Row title="Horror Movies" request={horrorM} setRowData={setRowData} loader={loader}/>
+        <Row title="Romantic Movies" request={romanceM} setRowData={setRowData} loader={loader}/>
+        <Row title="Documentaries" request={documentariesM} setRowData={setRowData} loader={loader}/>
       </div>
     </div>
   )

@@ -9,7 +9,7 @@ import './ProfileScreen.css'
 export default function ProfileScreen() {
 
   const user = useSelector(selectUser);
-  const [currentPlan, setCurrentPlan] = useState(null);
+  const [currentPlan, setCurrentPlan] = useState("");
   return (
     <div className="profileScreen">
       <Nav />
